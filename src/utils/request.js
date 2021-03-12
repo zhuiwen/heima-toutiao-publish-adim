@@ -3,6 +3,8 @@
  */
 import axios from 'axios'
 import JSONBig from 'json-bigint'
+import router from '@/router'
+import { Message } from 'element-ui'
 // 创建一个axios实例，说白了就是复制了一个axios
 // 我们通过这个实例去发请求，把需要的配置配置给这个实例来使用
 /**
@@ -14,7 +16,6 @@ import JSONBig from 'json-bigint'
 // 复制了一个axios的实例，不同的axios实例可以有不同的配置
 // 复制出来的axios和axios本身的功能一摸一样
 const request = axios.create({
-  baseURL: 'http://api-toutiao-web.itheima.net/',
   // 定制后端返回原始数据的处理，
   // 参数data就是后端返回的未经处理的json格式字符串
   transformResponse: [function (data) {
@@ -40,6 +41,35 @@ request.interceptors.request.use(config => {
     config.headers.Authorization = `Bearer ${user.token}`
   }
   return config
+})
+// 响应拦截器
+// 所有响应会经过这里
+request.interceptors.response.use(response => {
+  // 所有响应码为 2xx 的响应都会进入这里
+  // response是响应处理
+  return response
+}, error => {
+  // 任何超出 2xx 的响应都会进入这里
+  console.log('状态码异常')
+  const { status } = error.response
+  if (error.response && status === 401) {
+    Message('登录状态无效，请重新登录')
+    // 跳转到登录页面
+    router.replace('/login')
+  } else if (status === 400) {
+    Message({
+      type: 'warning',
+      message: '请求参数错误'
+    })
+    // 客户端参数错误
+  } else if (status === 403) {
+    // 没用操作权限
+    Message('没有操作权限')
+  } else if (status >= 500) {
+    // 服务端错误
+    Message.error('服务端异常，请稍后重试')
+  }
+  return Promise.reject(error)
 })
 // 导出请求方法
 export default request

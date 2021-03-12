@@ -9,17 +9,17 @@
         <div class="header-title">
           <i
             :class="{
-            'el-icon-s-fold': isCollapse,
-            'el-icon-s-unfold': !isCollapse
-          }"
-            @click="isCollapse=!isCollapse"
+              'el-icon-s-fold': isCollapse,
+              'el-icon-s-unfold': !isCollapse
+            }"
+            @click="isCollapse = !isCollapse"
           ></i>
           <span>江苏传智播客科技教育有限公司</span>
         </div>
         <el-dropdown>
           <div class="avatar-wrap">
             <img :src="user.photo" alt class="avatar" />
-            <span>{{user.name}}</span>
+            <span>{{ user.name }}</span>
             <i class="el-icon-arrow-down el-icon--right"></i>
           </div>
           <el-dropdown-menu slot="dropdown">
@@ -39,13 +39,14 @@
 <script type="text/ecmascript-6">
 import AppAside from './components/aside'
 import { getUserProfile } from '@/api/user'
+import globalBus from '@/utils/global-bus'
 export default {
   name: 'layoutIndex',
   data() {
     return {
-      user: {
-        name: '',
-        photo: 'http://toutiao-img.itheima.net/Fj2X-hfLE1HNJCVZHa42iOCa72HE'
+      user: { // 用户信息
+        name: '', // 用户名
+        photo: '' // 头像
       },
       // 侧边状态栏是否展开
       isCollapse: false
@@ -53,13 +54,15 @@ export default {
   },
   methods: {
     loadUserProfile() {
-      getUserProfile().then((res) => {
-        console.log(1111)
-        this.user = res.data.data
-        console.log(this.user)
-      }).catch(error => {
-        console.log('获取用户信息失败', error)
-      })
+      getUserProfile()
+        .then((res) => {
+          console.log(1111)
+          this.user = res.data.data
+          console.log(this.user)
+        })
+        .catch((error) => {
+          console.log('获取用户信息失败', error)
+        })
     },
     onLogout() {
       this.$confirm('确定退出登录?', '提示', {
@@ -87,6 +90,12 @@ export default {
   },
   mounted() {
     this.loadUserProfile()
+    // 当这个事件发布以后，这个注册函数就会被调用到
+    globalBus.$on('update-user', info => {
+      // 注意this.user = info，不要这么做，对象之间赋值的是引用，会导致相互影响的问题
+      info.name && (this.user.name = info.name)
+      info.photo && (this.user.photo = info.photo)
+    })
   },
   components: {
     AppAside

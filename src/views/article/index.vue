@@ -42,7 +42,7 @@
             end-placeholder="结束日期"
             :default-time="['12:00:00']"
             v-model="rangeDate"
-            format="MM-yyyy-DD"
+            format="yyyy-MM-DD"
             value-format="yyyy-MM-DD"
           >
           </el-date-picker>
@@ -131,6 +131,7 @@
               type="primary"
               circle
               icon="el-icon-edit"
+              @click="$router.push(`/publish?id=${scope.row.id}`)"
             ></el-button>
             <el-button
               size="mini"

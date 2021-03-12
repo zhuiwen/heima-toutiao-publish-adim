@@ -106,8 +106,6 @@ export default {
           })
           // 关闭loading
           this.loginLoading = false
-          // 存储token
-          window.sessionStorage.setItem('token', res.data.data.token)
           // 本地存储只能存储字符串
           // 如果需要存储对象、数组类型的数据，则把他们转为JSON字符串
           window.sessionStorage.setItem('user', JSON.stringify(res.data.data))

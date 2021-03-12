@@ -4,7 +4,7 @@
     <el-menu
       active-text-color="#fed45a"
       background-color="rgb(0, 30, 52)"
-      default-active="/"
+      :default-active="$route.path"
       router
       class="nav-menu"
       :collapse="isCollapse"
@@ -49,7 +49,9 @@
 export default {
   name: 'Aside',
   data() {
-    return {}
+    return {
+
+    }
   },
   props: ['is-collapse'],
   methods: {}

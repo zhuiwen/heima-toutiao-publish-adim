@@ -23,7 +23,21 @@ export const getUserProfile = () => {
   })
 }
 
-// 修改用户信息
-export const updateUser = () => {
+// 修改用户头像
+export const updateUserPhoto = data => {
+  return request({
+    method: 'PATCH',
+    url: '/mp/v1_0/user/photo',
+    // 如果通过axios传递FormData对象，会自动将headers的Content-Type设置为multipart/form-data
+    data
+  })
+}
 
+// 修改用户基本信息
+export const updateUserProfile = data => {
+  return request({
+    method: 'PATCH',
+    url: '/mp/v1_0/user/profile',
+    data
+  })
 }
